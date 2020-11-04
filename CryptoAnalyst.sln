@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeReader", "ExchangeReader\ExchangeReader.csproj", "{58355457-95B8-4E56-8FE3-63EDE55817D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExchangeReader", "ExchangeReader\ExchangeReader.csproj", "{58355457-95B8-4E56-8FE3-63EDE55817D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonData", "CommonData\CommonData.csproj", "{5A5F09FA-F052-43B6-A5E0-DA26DBDB7A1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonData", "CommonData\CommonData.csproj", "{5A5F09FA-F052-43B6-A5E0-DA26DBDB7A1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoExchange", "CryptoExchange\CryptoExchange.csproj", "{8A41DBA1-B9D1-4928-B1A1-8608640A2957}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoExchange", "CryptoExchange\CryptoExchange.csproj", "{8A41DBA1-B9D1-4928-B1A1-8608640A2957}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{802B715D-27D5-4394-BE3D-8D2FCB49A609}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoExchangeTest", "Tests\CryptoExchangeTest\CryptoExchangeTest.csproj", "{D9E408EE-E50D-4E31-AC24-18601BE67C0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +31,16 @@ Global
 		{8A41DBA1-B9D1-4928-B1A1-8608640A2957}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A41DBA1-B9D1-4928-B1A1-8608640A2957}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A41DBA1-B9D1-4928-B1A1-8608640A2957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9E408EE-E50D-4E31-AC24-18601BE67C0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9E408EE-E50D-4E31-AC24-18601BE67C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9E408EE-E50D-4E31-AC24-18601BE67C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9E408EE-E50D-4E31-AC24-18601BE67C0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D9E408EE-E50D-4E31-AC24-18601BE67C0A} = {802B715D-27D5-4394-BE3D-8D2FCB49A609}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DA21D9E4-E167-4991-85B6-1961B3941415}

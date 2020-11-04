@@ -3,6 +3,7 @@ using CryptoExchange.Enums;
 using CryptoExchange.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace CryptoExchange.Exchanges.Binance
                     Name = _.symbol,
                     BaseCurrency = _.baseAsset,
                     QuoteCurrency = _.quoteAsset,
-                    PairStatus = (_.status == "TRADING") ? PairStatus.Active : PairStatus.NoActive
+                    PairStatus = (_.status.ToUpper() == "TRADING") ? PairStatus.Active : PairStatus.NoActive
                 }).ToList();
         }
 
@@ -38,9 +39,9 @@ namespace CryptoExchange.Exchanges.Binance
             return apiItems.Select(_ => new PairTradeInfo
             {
                 Name = _.symbol,
-                AskPrice = decimal.Parse(_.askPrice),
-                BidPrice = decimal.Parse(_.bidPrice),
-                Volume = decimal.Parse(_.volume)
+                AskPrice = decimal.Parse(_.askPrice, CultureInfo.InvariantCulture.NumberFormat),
+                BidPrice = decimal.Parse(_.bidPrice, CultureInfo.InvariantCulture.NumberFormat),
+                Volume = decimal.Parse(_.volume, CultureInfo.InvariantCulture.NumberFormat)
             }).ToList();
         }
     }
