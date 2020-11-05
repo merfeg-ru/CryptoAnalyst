@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptoExchange
 {
-    interface ICryptoExchangeService
+    public interface ICryptoExchangeService
     {
         /// <summary>
         /// Получить имя биржи

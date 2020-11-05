@@ -24,5 +24,20 @@ namespace CryptoExchangeTest
 
             Assert.True((result.BadRequests + result.OkRequests) == 2);
         }
+
+        [Fact]
+        public async Task GetOkBadStatisticTest()
+        {
+            var repository = A.Fake<ICryptoExchangeRepository>();
+            A.CallTo(() => repository.GetPairDetailsAsync()).Throws(() => new Exception());
+
+            var service = new BinanceService(repository);
+            await service.GetPairDetailsAsync();
+            await service.GetPairDetailsAsync();
+
+            var result = service.GetStatistic();
+
+            Assert.Equal(2, result.BadRequests);
+        }
     }
 }
