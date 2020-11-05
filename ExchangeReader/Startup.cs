@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CryptoExchange;
+using CryptoExchange.Exchanges.Binance;
+using ExchangeReader.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -22,13 +25,28 @@ namespace ExchangeReader
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                    .ConfigureApiBehaviorOptions(options =>
+                    {
+                        options.InvalidModelStateResponseFactory = context =>
+                        {
+                            return new BadRequestObjectResult(context.ModelState);
+                        };
+                    });
+
+            services.RegisterDataBusServices(Configuration);
+
+            services.AddHostedService<TradeInfoSendWorker>();
+
+            services.AddSingleton<IBusSenderService, BusSenderService>();
+            services.AddSingleton<IExchangeReaderService, ExchangeReaderService>();
+
+            services.AddSingleton<ICryptoExchangeRepository, BinanceRepository>();
+            services.AddSingleton<ICryptoExchangeService, BinanceService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -39,8 +57,6 @@ namespace ExchangeReader
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -11,7 +11,7 @@ namespace ExchangeReader
     public class TradeInfoSendWorker : BackgroundService
     {
         // частоту опроса брать из настроек
-        private const int ThreadDelay = 1000;
+        private const int ThreadDelay = 20 * 1000;
 
         private readonly IBusSenderService _busSenderService;
         private readonly IExchangeReaderService _exchangeReaderService;
@@ -26,6 +26,8 @@ namespace ExchangeReader
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogWarning($"TradeInfoSendWorker запущен");
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 try

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace ExchangeReader.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("")]
     public class StatisticController : ControllerBase
     {
         private readonly ILogger<StatisticController> _logger;

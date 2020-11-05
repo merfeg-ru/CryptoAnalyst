@@ -32,12 +32,12 @@ namespace ExchangeReader
                 };
 
                 await _endpoint.Publish<IBusPairTradeInfoMessage>(tradeInfoMessage, cancellationToken);
-                _logger.LogWarning($"Передача в шину данных выполнена [{tradeInfoMessage}]");
+                _logger.LogInformation($"Передача в шину данных выполнена [{tradeInfoMessage}]");
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogWarning(ex.Message);
                 return false;
             }
         }

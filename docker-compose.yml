@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  exchangereader:
+    image: ${DOCKER_REGISTRY-}exchangereader
+    build:
+      context: .
+      dockerfile: ExchangeReader/Dockerfile
+    links:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq

@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoExchange", "CryptoExc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{802B715D-27D5-4394-BE3D-8D2FCB49A609}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoExchangeTest", "Tests\CryptoExchangeTest\CryptoExchangeTest.csproj", "{D9E408EE-E50D-4E31-AC24-18601BE67C0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoExchangeTest", "Tests\CryptoExchangeTest\CryptoExchangeTest.csproj", "{D9E408EE-E50D-4E31-AC24-18601BE67C0A}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AE3E829B-0447-496B-BD17-26A960B12882}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{D9E408EE-E50D-4E31-AC24-18601BE67C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9E408EE-E50D-4E31-AC24-18601BE67C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9E408EE-E50D-4E31-AC24-18601BE67C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE3E829B-0447-496B-BD17-26A960B12882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE3E829B-0447-496B-BD17-26A960B12882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE3E829B-0447-496B-BD17-26A960B12882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE3E829B-0447-496B-BD17-26A960B12882}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
