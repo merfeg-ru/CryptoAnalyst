@@ -8,6 +8,8 @@ namespace ExchangeReader
 {
     public interface IExchangeReaderService
     {
+        string ExchangeName { get; }
         Task<IList<IBusPairTradeInfo>> GetTradeInfoAsync();
+        (int OkRequests, int BadRequests) GetStatistic();
     }
 }

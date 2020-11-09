@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,24 @@ namespace ExchangeReader
 {
     public class TradeInfoSendWorker : BackgroundService
     {
-        // частоту опроса брать из настроек
-        private const int ThreadDelay = 20 * 1000;
+        // Значение частоты опроса по умолчанию
+        private readonly TimeSpan _requestsDelay = TimeSpan.FromSeconds(20);
 
         private readonly IBusSenderService _busSenderService;
         private readonly IExchangeReaderService _exchangeReaderService;
         private readonly ILogger<TradeInfoSendWorker> _logger;
+        private readonly IConfiguration _configuration;
 
-        public TradeInfoSendWorker(IBusSenderService busSenderService, IExchangeReaderService exchangeReaderService, ILogger<TradeInfoSendWorker> logger)
+        public TradeInfoSendWorker(IBusSenderService busSenderService, IExchangeReaderService exchangeReaderService, 
+            ILogger<TradeInfoSendWorker> logger, IConfiguration configuration)
         {
             _busSenderService = busSenderService ?? throw new ArgumentNullException(nameof(busSenderService));
             _exchangeReaderService = exchangeReaderService ?? throw new ArgumentNullException(nameof(exchangeReaderService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+            _requestsDelay = TimeSpan.FromSeconds(int.Parse(
+                _configuration.GetSection("Exchanges")["IntervalRequestsSecond"]));
         }
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,7 +51,7 @@ namespace ExchangeReader
                 }
 
                 // Ожидание
-                await Task.Delay(ThreadDelay, stoppingToken);
+                await Task.Delay(_requestsDelay, stoppingToken);
             }
         }
     }

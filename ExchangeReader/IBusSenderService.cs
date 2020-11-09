@@ -10,5 +10,7 @@ namespace ExchangeReader
     public interface IBusSenderService
     {
         Task<bool> Send(IList<IBusPairTradeInfo> tradeInfo, CancellationToken cancellationToken);
+        int GetCountSendingItems();
+        IList<IBusPairTradeInfo> GetLastSendingData();
     }
 }

@@ -2,29 +2,48 @@
 using CryptoExchange;
 using CryptoExchange.Enums;
 using CryptoExchange.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ExchangeReader
 {
-    public class ExchangeReaderService : IExchangeReaderService
+    public class ExchangeReaderService : IExchangeReaderService, IDisposable
     {
         private readonly ICryptoExchangeService _exchangeService;
-        private static Dictionary<string, PairDetail> _pairDetailsDictionary;
+        private readonly IConfiguration _configuration;
 
-        public ExchangeReaderService(ICryptoExchangeService exchangeService)
+        private Dictionary<string, PairDetail> _pairDetailsDictionary = new Dictionary<string, PairDetail>();
+        private readonly Timer _timer;
+
+        public string ExchangeName => _exchangeService.Name;
+
+        public ExchangeReaderService(ICryptoExchangeService exchangeService, IConfiguration configuration)
         {
             _exchangeService = exchangeService ?? throw new ArgumentNullException(nameof(exchangeService));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+            var updatePairDetailsTimeMinute = int.Parse(
+                _configuration.GetSection("Exchanges")["UpdatePairDetailsTimeMinute"]);
+
+            // Таймер обновления PairDetails, на случай появления новых валютных пар, или исчезновения старых
+            _timer = new Timer(async (_) =>
+            {
+                await InitPairDetailsDictionaryAsync();
+            }, null, TimeSpan.FromMinutes(updatePairDetailsTimeMinute), TimeSpan.FromMinutes(updatePairDetailsTimeMinute));
+        }
+
+        public void Dispose()
+        {
+            _timer.Dispose();
         }
 
         public async Task<IList<IBusPairTradeInfo>> GetTradeInfoAsync()
         {
-            /* Нужно как то позаботится о переодическом обновлении _pairDetailsDictionary,
-               валюта может перестать торговаться, или появится новая */
-
-            if (_pairDetailsDictionary == null)
+            if (_pairDetailsDictionary.Count == 0)
                 await InitPairDetailsDictionaryAsync();
 
             var pairTradeInfo = await _exchangeService.GetPairsStatsAsync();
@@ -41,7 +60,8 @@ namespace ExchangeReader
                         BidPrice = pair.BidPrice,
                         Volume = pair.Volume,
                         BaseCurrency = pairDetails.BaseCurrency,
-                        QuoteCurrency = pairDetails.QuoteCurrency
+                        QuoteCurrency = pairDetails.QuoteCurrency,
+                        ExchangeName = _exchangeService.Name
                     });
                 }
             }
@@ -49,16 +69,22 @@ namespace ExchangeReader
             return returnList;
         }
 
+        public (int OkRequests, int BadRequests) GetStatistic()
+        {
+            return _exchangeService.GetStatistic();
+        }
+
         private async Task InitPairDetailsDictionaryAsync()
         {
-            _pairDetailsDictionary = new Dictionary<string, PairDetail>();
-
             var pairDetails = await _exchangeService.GetPairDetailsAsync();
 
+            var newDetails = new Dictionary<string, PairDetail>();
             foreach (var pair in pairDetails.Where(_ => _.PairStatus == PairStatus.Active))
             {
-                _pairDetailsDictionary.Add(pair.Name, pair);
+                newDetails.Add(pair.Name, pair);
             }
+
+            _pairDetailsDictionary = newDetails;
         }
     }
 }

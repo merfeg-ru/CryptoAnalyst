@@ -12,10 +12,11 @@ namespace CommonData.BusModels
         public decimal AskPrice { get; set; }
         public decimal BidPrice { get; set; }
         public decimal Volume { get; set; }
+        public string ExchangeName { get; set; }
 
         public override string ToString()
         {
-            return $"{Name} A:{AskPrice} B:{BidPrice} {Volume}";
+            return $"{ExchangeName} {Name} A:{AskPrice} B:{BidPrice} {Volume}";
         }
     }
 }

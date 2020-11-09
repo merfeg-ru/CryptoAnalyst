@@ -14,11 +14,18 @@ namespace ExchangeReader
         private readonly ILogger<BusSenderService> _logger;
         private readonly IPublishEndpoint _endpoint;
 
+        private int _sendingItems = 0;
+        private IList<IBusPairTradeInfo> _lastSendingData = new List<IBusPairTradeInfo>();
+
         public BusSenderService(ILogger<BusSenderService> logger, IPublishEndpoint endpoint)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
         }
+
+        public int GetCountSendingItems() => _sendingItems;
+
+        public IList<IBusPairTradeInfo> GetLastSendingData() => _lastSendingData;
 
         public async Task<bool> Send(IList<IBusPairTradeInfo> tradeInfoList, CancellationToken cancellationToken)
         {
@@ -32,6 +39,10 @@ namespace ExchangeReader
                 };
 
                 await _endpoint.Publish<IBusPairTradeInfoMessage>(tradeInfoMessage, cancellationToken);
+
+                _sendingItems++;
+                _lastSendingData = tradeInfoList;
+
                 _logger.LogInformation($"Передача в шину данных выполнена [{tradeInfoMessage}]");
                 return true;
             }

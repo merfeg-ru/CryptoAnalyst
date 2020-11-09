@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using CommonData.BusModels;
+using ExchangeReader.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,24 +14,34 @@ namespace ExchangeReader.Controllers
     [Route("")]
     public class StatisticController : ControllerBase
     {
-        private readonly ILogger<StatisticController> _logger;
-
-        public StatisticController(ILogger<StatisticController> logger)
+        private readonly IExchangeReaderService _exchangeReader;
+        private readonly IBusSenderService _busSenderService;
+        public StatisticController(IExchangeReaderService exchangeReader, IBusSenderService busSenderService)
         {
-            _logger = logger;
+            _exchangeReader = exchangeReader ?? throw new Exception(nameof(exchangeReader));
+            _busSenderService = busSenderService ?? throw new Exception(nameof(busSenderService));
         }
 
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-        //    var rng = new Random();
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
+        [HttpGet]
+        [Route("statistic")]
+        public async Task<StatisticView> GetStatistic(CancellationToken cancellationToken)
+        {
+            return await Task.Run(() =>
+            {
+                return new StatisticView
+                {
+                    ExchangeRequests = _exchangeReader.GetStatistic(),
+                    ExchangeName = _exchangeReader.ExchangeName,
+                    BusSendingMessage = _busSenderService.GetCountSendingItems()
+                };
+            }, cancellationToken);
+        }
+
+        [HttpGet]
+        [Route("lastdata")]
+        public async Task<IList<IBusPairTradeInfo>> GetLastData(CancellationToken cancellationToken)
+        {
+            return await Task.Run(() => _busSenderService.GetLastSendingData(), cancellationToken);
+        }
     }
 }
