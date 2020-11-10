@@ -40,7 +40,7 @@ namespace ExchangeReader
                 try
                 {
                     var tradeInfo = await _exchangeReaderService.GetTradeInfoAsync();
-                    var resultSending = await _busSenderService.Send(tradeInfo, stoppingToken);
+                    var resultSending = await _busSenderService.Send(tradeInfo, _exchangeReaderService.Exchange, stoppingToken);
 
                     if (!resultSending)
                         _logger.LogWarning("Ошибка отправки данных");

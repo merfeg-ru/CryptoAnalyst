@@ -12,6 +12,5 @@ namespace CommonData.BusModels
         decimal AskPrice { get; set; }
         decimal BidPrice { get; set; }
         decimal Volume { get; set; }
-        string ExchangeName { get; set; }
     }
 }

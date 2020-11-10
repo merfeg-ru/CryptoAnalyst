@@ -1,4 +1,5 @@
-﻿using CryptoExchange.Models;
+﻿using CommonData.Enums;
+using CryptoExchange.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +19,7 @@ namespace CryptoExchange.Exchanges.Binance
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public string Name => "Binance";
+        public Exchange Exchange => Exchange.Binance;
 
         public async Task<IList<PairDetail>> GetPairDetailsAsync()
         {

@@ -1,4 +1,5 @@
 ﻿using CommonData.BusModels;
+using CommonData.Enums;
 using CryptoExchange;
 using CryptoExchange.Enums;
 using CryptoExchange.Models;
@@ -19,7 +20,7 @@ namespace ExchangeReader
         private Dictionary<string, PairDetail> _pairDetailsDictionary = new Dictionary<string, PairDetail>();
         private readonly Timer _timer;
 
-        public string ExchangeName => _exchangeService.Name;
+        public Exchange Exchange => _exchangeService.Exchange;
 
         public ExchangeReaderService(ICryptoExchangeService exchangeService, IConfiguration configuration)
         {
@@ -60,8 +61,7 @@ namespace ExchangeReader
                         BidPrice = pair.BidPrice,
                         Volume = pair.Volume,
                         BaseCurrency = pairDetails.BaseCurrency,
-                        QuoteCurrency = pairDetails.QuoteCurrency,
-                        ExchangeName = _exchangeService.Name
+                        QuoteCurrency = pairDetails.QuoteCurrency
                     });
                 }
             }

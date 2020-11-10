@@ -1,4 +1,5 @@
 ﻿using CommonData.BusModels;
+using CommonData.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace ExchangeReader
 {
     public interface IExchangeReaderService
     {
-        string ExchangeName { get; }
+        Exchange Exchange { get; }
         Task<IList<IBusPairTradeInfo>> GetTradeInfoAsync();
         (int OkRequests, int BadRequests) GetStatistic();
     }

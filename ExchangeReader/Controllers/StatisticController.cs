@@ -29,7 +29,7 @@ namespace ExchangeReader.Controllers
                 return new StatisticView
                 {
                     ExchangeRequests = _exchangeReader.GetStatistic(),
-                    ExchangeName = _exchangeReader.ExchangeName,
+                    Exchange = _exchangeReader.Exchange,
                     BusSendingMessage = _busSenderService.GetCountSendingItems()
                 };
             }, cancellationToken);

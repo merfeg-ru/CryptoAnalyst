@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using CommonData.Enums;
 
 namespace CryptoExchange
 {
@@ -11,7 +12,7 @@ namespace CryptoExchange
         /// <summary>
         /// Получить имя биржи
         /// </summary>
-        string Name { get; }
+        Exchange Exchange { get; }
 
         /// <summary>
         /// Получить данные о торгуемых парах: цена, объем

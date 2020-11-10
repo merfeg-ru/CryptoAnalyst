@@ -1,20 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
-using CryptoExchange;
-using CryptoExchange.Exchanges.Binance;
-using ExchangeReader.Extensions;
+using AutoMapper;
+using HistoryExchange.Context;
+using HistoryExchange.Extensions;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace ExchangeReader
+namespace HistoryExchange
 {
     public class Startup
     {
@@ -27,27 +30,27 @@ namespace ExchangeReader
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                    .ConfigureApiBehaviorOptions(options =>
-                    {
-                        options.InvalidModelStateResponseFactory = context =>
-                        {
-                            return new BadRequestObjectResult(context.ModelState);
-                        };
-                    });
+            services.AddControllers();
 
+            //Main
+            services.AddScoped<IHistoryService, HistoryService>();
+            services.AddScoped<IHistoryRepository, HistoryRepository>();
+
+            // Bus
             services.RegisterDataBusServices(Configuration);
-            services.AddSingleton<IBusSenderService, BusSenderService>();
 
-            // Binance
-            services.AddSingleton<ICryptoExchangeRepository, BinanceRepository>();
-            services.AddSingleton<ICryptoExchangeService, BinanceService>();
-            services.AddSingleton<IExchangeReaderService, ExchangeReaderService>();
-            services.AddHostedService<TradeInfoSendWorker>();
+            // Background Service
+            services.AddHostedService<ReceiverWorker>();
 
-            // ƒл€ добавлени€ опросчиков дл€ новых бирж, нужно будет использовать 
-            // другие экземпл€ры ICryptoExchangeRepository и ICryptoExchangeService 
-            // дл€ параметров ExchangeReaderService, и затем дл€ TradeInfoSendWorker
+            // Data Base
+            string connection = Configuration.GetConnectionString("HistoryDataBase");
+            services.AddDbContext<HistoryContext>(options => options.UseNpgsql(connection));
+
+            // MediatR
+            // services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            // AutoMapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -60,6 +63,8 @@ namespace ExchangeReader
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

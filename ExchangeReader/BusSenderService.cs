@@ -1,4 +1,5 @@
 ﻿using CommonData.BusModels;
+using CommonData.Enums;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using System;
@@ -27,7 +28,7 @@ namespace ExchangeReader
 
         public IList<IBusPairTradeInfo> GetLastSendingData() => _lastSendingData;
 
-        public async Task<bool> Send(IList<IBusPairTradeInfo> tradeInfoList, CancellationToken cancellationToken)
+        public async Task<bool> Send(IList<IBusPairTradeInfo> tradeInfoList, Exchange exchange, CancellationToken cancellationToken)
         {
             try
             {
@@ -35,7 +36,8 @@ namespace ExchangeReader
                 {
                     MessageId = Guid.NewGuid(),
                     PairsTradeInfo = tradeInfoList,
-                    CreationDate = DateTime.Now
+                    CreationDate = DateTime.Now,
+                    Exchange = exchange
                 };
 
                 await _endpoint.Publish<IBusPairTradeInfoMessage>(tradeInfoMessage, cancellationToken);
